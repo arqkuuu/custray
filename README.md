@@ -2,7 +2,7 @@
 A simple(and bad) tool to create your own tray icons.
 
 # Installation
-It depends on x11lib, libxfixes and imlib2. You should probably install them.
+It depends on libx11, libxfixes and imlib2. You should probably install them.
 
 Then clone this repository and cd into it with
 ```
