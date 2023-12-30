@@ -2,7 +2,9 @@
 A simple(and bad) tool to create your own tray icons.
 
 # Installation
-Clone this repository and cd into it with
+It depends on x11lib, libxfixes and imlib2. You should probably install them.
+
+Then clone this repository and cd into it with
 ```
 git clone https://github.com/arqkuuu/custray && cd custray
 ```
