@@ -15,4 +15,6 @@ Done.
 # Usage
 See ```custray -h``` :3
 
-
+# TODO
+1. Signal handler to dynamically switch icons
+2. Delete this trash
