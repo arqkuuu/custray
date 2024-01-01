@@ -1,5 +1,5 @@
 # custray
-A simple(and bad) tool to create your own tray icons.
+A simple(and bad) X11 tool to create your own tray icons. 
 
 # Installation
 It depends on libx11, libxfixes and imlib2. You should probably install them.
@@ -21,6 +21,6 @@ See ```custray -h``` :3
 1. Signal handler to dynamically switch icons
 2. Delete this trash
 
-# I want menus and submenus and subsubmenus and subsubsubmenus and subsubsubsubmenus and sfkasfk
+# I need menus and submenus and subsubmenus and subsubsubmenus and subsubsubsubmenus and sfkasfk
 
-See (xmenu)[https://github.com/phillbush/xmenu]. It's very cool
+See [xmenu](https://github.com/phillbush/xmenu). It's cool.
