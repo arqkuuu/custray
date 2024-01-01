@@ -88,8 +88,7 @@ void parse_args(char **argv, int argc) {
 }
 
 
-void set_context_icon(Display *dpy, XVisualInfo vinfo,
-                      XSetWindowAttributes attr, Window win) {
+void set_context_icon(Display *dpy, XVisualInfo vinfo, XSetWindowAttributes attr, Window win) {
     imlib_context_set_display(dpy);
     imlib_context_set_visual(vinfo.visual);
     imlib_context_set_colormap(attr.colormap);
