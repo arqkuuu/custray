@@ -44,7 +44,6 @@ void help() {
         "\nusage example:\n\n"
         "custray -i /home/arqkuuu/icon.jpg -1 mpc toggle -3 /home/arqkuuu/scripts/mpd_xmenu.sh -s 24\n\n");
     cleanup();
-    exit(0);
 }
 
 void parse_args(char **argv, int argc) {
