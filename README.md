@@ -20,3 +20,7 @@ See ```custray -h``` :3
 # TODO
 1. Signal handler to dynamically switch icons
 2. Delete this trash
+
+# I want menus and submenus and subsubmenus and subsubsubmenus and subsubsubsubmenus and sfkasfk
+
+See (xmenu)[https://github.com/phillbush/xmenu]. It's very cool
