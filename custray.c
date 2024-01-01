@@ -22,6 +22,16 @@ int btn_execs_size = 0;
 char *iconpath = NULL;
 int size = 20;
 
+void cleanup() {
+    for (int i = 0; i < btn_execs_size; i++) {
+        free(btn_execs[i].btn_exec);
+    }
+    free(btn_execs);
+    if (iconpath != NULL)
+        imlib_free_image();
+    exit(0);
+}
+
 void help() {
     printf(
         "\n-[1...∞] [any oneliner] - assign a command to the mouse button.\n"
@@ -33,7 +43,7 @@ void help() {
         "-h - show this help\n"
         "\nusage example:\n\n"
         "custray -i /home/arqkuuu/icon.jpg -1 mpc toggle -3 /home/arqkuuu/scripts/mpd_xmenu.sh -s 24\n\n");
-        
+    cleanup();
     exit(0);
 }
 
@@ -78,15 +88,6 @@ void parse_args(char **argv, int argc) {
     }
 }
 
-void cleanup() {
-    for (int i = 0; i < btn_execs_size; i++) {
-        free(btn_execs[i].btn_exec);
-    }
-    free(btn_execs);
-    if (iconpath != NULL)
-        imlib_free_image();
-    exit(0);
-}
 
 void set_context_icon(Display *dpy, XVisualInfo vinfo,
                       XSetWindowAttributes attr, Window win) {
