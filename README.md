@@ -19,9 +19,9 @@ See ```custray -h``` :3
 
 # TODO
 
-1) Signal handler to dynamically switch icons
-6) Maybe rewrite it in xcb
-2) Delete this trash
+1 . Signal handler to dynamically switch icons
+6 . Maybe rewrite it in xcb
+2 . Delete this trash
 
 # I need menus and submenus and subsubmenus and subsubsubmenus and subsubsubsubmenus and sfkasfk
 
