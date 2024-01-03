@@ -39,7 +39,7 @@ void help() {
         "You can assign commands to as many buttons, as you have on your mouse.\n"
         "Spinning your wheel is considered a button too. One for each direction.\n\n"
         "-i [path] - path to the icon image\n"
-        "-size [number] - desired size of the icon\n"
+        "-s [number] - desired size of the icon\n"
         "-h - show this help\n"
         "\nusage example:\n\n"
         "custray -i /home/arqkuuu/icon.jpg -1 mpc toggle -3 /home/arqkuuu/scripts/mpd_xmenu.sh -s 24\n\n");
