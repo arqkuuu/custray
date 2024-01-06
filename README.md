@@ -23,7 +23,7 @@ See ```custray -h``` :3
 
 6 . Maybe rewrite it in xcb
 
-2 . Delete this trash
+-2 . Delete this trash
 
 # I need menus and submenus and subsubmenus and subsubsubmenus and subsubsubsubmenus and sfkasfk
 
