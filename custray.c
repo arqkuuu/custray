@@ -53,10 +53,9 @@ void parse_args(char **argv, int argc) {
                 help();
             } else if (!strcmp(argv[i], "-i")) {
                 if ((i + 1) < argc && argv[i + 1][0] != '-' &&
-                    access(argv[i + 1], R_OK) == 0) {
-                    iconpath = malloc(strlen(argv[i + 1]) * sizeof(char));
-                    strcpy(iconpath, argv[i + 1]);
-                } else
+                    access(argv[i + 1], R_OK) == 0)
+                    iconpath = argv[i+1]
+                 else
                     printf("Illegal icon path. Skipping the argument.\n");
             } else if (!strcmp(argv[i], "-s")) {
                 if ((i + 1) < argc && isanum(argv[i + 1]))
