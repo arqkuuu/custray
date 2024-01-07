@@ -129,13 +129,10 @@ Window create_window(Display *dpy, Window root) {
     if (icon != NULL) {
         XVisualInfo vinfo;
         XMatchVisualInfo(dpy, DefaultScreen(dpy), 32, TrueColor, &vinfo);
-        attr.colormap = XCreateColormap(dpy, DefaultRootWindow(dpy),
-                                        vinfo.visual, AllocNone);
+        attr.colormap = XCreateColormap(dpy, DefaultRootWindow(dpy), vinfo.visual, AllocNone);
         attr.border_pixel = 0;
         attr.background_pixel = 0;
-        win = XCreateWindow(dpy, DefaultRootWindow(dpy), 0, 0, size, size, 0,
-                            vinfo.depth, InputOutput, vinfo.visual,
-                            CWColormap | CWBorderPixel | CWBackPixel, &attr);
+        win = XCreateWindow(dpy, DefaultRootWindow(dpy), 0, 0, size, size, 0, vinfo.depth, InputOutput, vinfo.visual, CWColormap | CWBorderPixel | CWBackPixel, &attr);
         set_context_icon(dpy, vinfo, attr, win);
     } else {
         srand((unsigned int)time(NULL));
