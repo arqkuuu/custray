@@ -19,7 +19,7 @@ See ```custray -h``` :3
 
 # TODO
 
-1 . Signal handler to dynamically switch icons
+1 . Somehow dynamically switch icons
 
 6 . Maybe rewrite it in xcb
 
