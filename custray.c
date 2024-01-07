@@ -19,16 +19,13 @@ typedef struct {
 
 btn_exec *btn_execs = NULL;
 int btn_execs_size = 0;
-char *iconpath = NULL;
+char *icon = NULL;
 int size = 20;
 
 void cleanup() {
-    for (int i = 0; i < btn_execs_size; i++) {
-        free(btn_execs[i].btn_exec);
-    }
+    for (int i = 0; i < btn_execs_size; i++) free(btn_execs[i].btn_exec);
     free(btn_execs);
-    if (iconpath != NULL)
-        imlib_free_image();
+    if (icon != NULL) imlib_free_image();
     exit(0);
 }
 
@@ -52,31 +49,20 @@ void parse_args(char **argv, int argc) {
             if (!strcmp(argv[i], "-h")) {
                 help();
             } else if (!strcmp(argv[i], "-i")) {
-                if ((i + 1) < argc && argv[i + 1][0] != '-' &&
-                    access(argv[i + 1], R_OK) == 0)
-                    iconpath = argv[i+1];
-                 else
-                    printf("Illegal icon path. Skipping the argument.\n");
+                if ((i + 1) < argc && argv[i + 1][0] != '-' && access(argv[i + 1], R_OK) == 0) icon = argv[i+1];
+                else printf("Illegal icon path. Skipping the argument.\n");
             } else if (!strcmp(argv[i], "-s")) {
-                if ((i + 1) < argc && isanum(argv[i + 1]))
-                    size = atoi(argv[i + 1]);
-                else
-                    printf("Illegal size. Skipping the argument.\n");
+                if ((i + 1) < argc && isanum(argv[i + 1])) size = atoi(argv[i + 1]);
+                else printf("Illegal size. Skipping the argument.\n");
             } else if (isanum((argv[i] + 1))) {
-                btn_execs = (btn_exec *)realloc(
-                    btn_execs, (btn_execs_size + 1) * sizeof(btn_exec));
+                btn_execs = (btn_exec *)realloc(btn_execs, (btn_execs_size + 1) * sizeof(btn_exec));
                 btn_execs[btn_execs_size].number = atoi(argv[i] + 1);
-                btn_execs[btn_execs_size].btn_exec =
-                    (char *)malloc(sizeof(char));
+                btn_execs[btn_execs_size].btn_exec = (char *)malloc(sizeof(char));
                 btn_execs[btn_execs_size].btn_exec[0] = '\0';
                 for (int j = i + 1; j < argc; j++) {
                     if (argv[j][0] == '-')
                         break;
-                    btn_execs[btn_execs_size].btn_exec = (char *)realloc(
-                        btn_execs[btn_execs_size].btn_exec,
-                        (strlen(btn_execs[btn_execs_size].btn_exec) +
-                         strlen(argv[j]) + 1) *
-                            sizeof(char));
+                    btn_execs[btn_execs_size].btn_exec = (char *)realloc(btn_execs[btn_execs_size].btn_exec, (strlen(btn_execs[btn_execs_size].btn_exec) + strlen(argv[j]) + 1) * sizeof(char));
                     strcat(btn_execs[btn_execs_size].btn_exec, argv[j]);
                     strcat(btn_execs[btn_execs_size].btn_exec, " ");
                 }
@@ -94,21 +80,20 @@ void set_context_icon(Display *dpy, XVisualInfo vinfo, XSetWindowAttributes attr
     imlib_context_set_drawable(win);
 }
 
-void resize_icon(Display *dpy, Window win, Imlib_Image image) {
-    Imlib_Image res = imlib_create_cropped_scaled_image(
-        0, 0, imlib_image_get_width(), imlib_image_get_height(), size, size);
+void resize_icon(Imlib_Image image) {
+    Imlib_Image res = imlib_create_cropped_scaled_image(0, 0, imlib_image_get_width(), imlib_image_get_height(), size, size);
     imlib_free_image();
     imlib_context_set_image(res);
 }
 
-void load_icon(Display *dpy, Window win) {
-    Imlib_Image image = imlib_load_image(iconpath);
+void load_icon() {
+    Imlib_Image image = imlib_load_image(icon);
     imlib_context_set_image(image);
-    resize_icon(dpy, win, image);
+    resize_icon(image);
 }
 
-void rerender_icon(Display *dpy, Window win) {
-    XClearWindow(dpy, win);
+void rerender_icon() {
+    XClearWindow(imlib_context_get_display(), imlib_context_get_drawable());
     imlib_render_image_on_drawable(0, 0);
 }
 
@@ -141,7 +126,7 @@ void send_to_tray(Display *dpy, Window tray, long message, long data1, long data
 Window create_window(Display *dpy, Window root) {
     Window win;
     XSetWindowAttributes attr;
-    if (iconpath != NULL) {
+    if (icon != NULL) {
         XVisualInfo vinfo;
         XMatchVisualInfo(dpy, DefaultScreen(dpy), 32, TrueColor, &vinfo);
         attr.colormap = XCreateColormap(dpy, DefaultRootWindow(dpy),
@@ -163,9 +148,7 @@ Window create_window(Display *dpy, Window root) {
 }
 
 void start_mainloop(Display *dpy, Window win) {
-    XFixesSelectSelectionInput(dpy, DefaultRootWindow(dpy),
-                               XInternAtom(dpy, "_NET_SYSTEM_TRAY_S0", False),
-                               XFixesSetSelectionOwnerNotifyMask);
+    XFixesSelectSelectionInput(dpy, DefaultRootWindow(dpy), XInternAtom(dpy, "_NET_SYSTEM_TRAY_S0", False), XFixesSetSelectionOwnerNotifyMask);
     XSelectInput(dpy, win, ButtonPressMask);
 
     int evbase, errbase;
@@ -175,10 +158,8 @@ void start_mainloop(Display *dpy, Window win) {
     XEvent ev;
     Window tray;
     tray = get_tray(dpy);
-    if (tray != None)
-        send_to_tray(dpy, tray, 0, win, 0, 0);
-    if (iconpath != NULL)
-        load_icon(dpy, win);
+    if (tray != None)send_to_tray(dpy, tray, 0, win, 0, 0);
+    if (icon != NULL) load_icon();
     XSync(dpy, False);
     for (;;) {
         XNextEvent(dpy, &ev);
@@ -196,8 +177,7 @@ void start_mainloop(Display *dpy, Window win) {
             } else {
                 XUnmapWindow(dpy, win);
             }
-        } else if (iconpath != NULL)
-            rerender_icon(dpy, win);
+        } else if (icon != NULL) rerender_icon();
         XFlush(dpy);
     }
 }
