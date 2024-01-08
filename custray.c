@@ -45,11 +45,11 @@ void help() {
 
 void parse_args(char **argv, int argc) {
     for (int i = 1; i < argc; i++) {
-        if (argv[i][0] == '-') {
+        if (*argv[i] == '-') {
             if (!strcmp(argv[i]+1, "h")) {
                 help();
             } else if (!strcmp(argv[i] + 1, "i")) {
-                if ((i + 1) < argc && argv[i + 1][0] != '-' && access(argv[i + 1], R_OK) == 0) icon = argv[i+1];
+                if ((i + 1) < argc && *argv[i + 1] != '-' && access(argv[i + 1], R_OK) == 0) icon = argv[i+1];
                 else printf("Illegal icon path. Skipping the argument.\n");
             } else if (!strcmp(argv[i] + 1, "s")) {
                 if ((i + 1) < argc && isanum(argv[i + 1])) size = atoi(argv[i + 1]);
@@ -60,9 +60,10 @@ void parse_args(char **argv, int argc) {
                 btn_execs[btn_execs_size].btn_exec = (char *)malloc(sizeof(char));
                 *btn_execs[btn_execs_size].btn_exec = '\0';
                 for (int j = i + 1; j < argc; j++) {
-                    if (argv[j][0] == '-') break;
+                    if (*argv[j] == '-') break;
                     btn_execs[btn_execs_size].btn_exec = (char *)realloc(btn_execs[btn_execs_size].btn_exec, (strlen(btn_execs[btn_execs_size].btn_exec) + strlen(argv[j]) + 1) * sizeof(char));
-                    sprintf(btn_execs[btn_execs_size].btn_exec, "%s ", argv[j]);
+                    strcat(btn_execs[btn_execs_size].btn_exec, argv[j]);
+                    strcat(btn_execs[btn_execs_size].btn_exec, " ");
                 }
                 btn_execs_size++;
             }
