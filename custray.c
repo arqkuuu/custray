@@ -58,20 +58,17 @@ void parse_args(char **argv, int argc) {
                 btn_execs = (btn_exec *)realloc(btn_execs, (btn_execs_size + 1) * sizeof(btn_exec));
                 btn_execs[btn_execs_size].number = atoi(argv[i] + 1);
                 btn_execs[btn_execs_size].btn_exec = (char *)malloc(sizeof(char));
-                btn_execs[btn_execs_size].btn_exec[0] = '\0';
+                *btn_execs[btn_execs_size].btn_exec = '\0';
                 for (int j = i + 1; j < argc; j++) {
-                    if (argv[j][0] == '-')
-                        break;
+                    if (argv[j][0] == '-') break;
                     btn_execs[btn_execs_size].btn_exec = (char *)realloc(btn_execs[btn_execs_size].btn_exec, (strlen(btn_execs[btn_execs_size].btn_exec) + strlen(argv[j]) + 1) * sizeof(char));
-                    strcat(btn_execs[btn_execs_size].btn_exec, argv[j]);
-                    strcat(btn_execs[btn_execs_size].btn_exec, " ");
+                    sprintf(btn_execs[btn_execs_size].btn_exec, "%s ", argv[j]);
                 }
                 btn_execs_size++;
             }
         }
     }
 }
-
 
 void set_context_icon(Display *dpy, XVisualInfo vinfo, XSetWindowAttributes attr, Window win) {
     imlib_context_set_display(dpy);
@@ -100,8 +97,7 @@ void rerender_icon() {
 Window get_tray(Display *dpy) {
     Atom selection_atom = XInternAtom(dpy, "_NET_SYSTEM_TRAY_S0", False);
     Window tray = XGetSelectionOwner(dpy, selection_atom);
-    if (tray != None)
-        XSelectInput(dpy, tray, SubstructureNotifyMask);
+    if (tray != None) XSelectInput(dpy, tray, SubstructureNotifyMask);
     return tray;
 }
 
@@ -110,8 +106,7 @@ void send_to_tray(Display *dpy, Window tray, long message, long data1, long data
     memset(&ev, 0, sizeof(ev));
     ev.xclient.type = ClientMessage;
     ev.xclient.window = tray;
-    ev.xclient.message_type =
-        XInternAtom(dpy, "_NET_SYSTEM_TRAY_OPCODE", False);
+    ev.xclient.message_type = XInternAtom(dpy, "_NET_SYSTEM_TRAY_OPCODE", False);
     ev.xclient.format = 32;
     ev.xclient.data.l[0] = CurrentTime;
     ev.xclient.data.l[1] = message;
@@ -147,11 +142,9 @@ Window create_window(Display *dpy, Window root) {
 void start_mainloop(Display *dpy, Window win) {
     XFixesSelectSelectionInput(dpy, DefaultRootWindow(dpy), XInternAtom(dpy, "_NET_SYSTEM_TRAY_S0", False), XFixesSetSelectionOwnerNotifyMask);
     XSelectInput(dpy, win, ButtonPressMask);
-
     int evbase, errbase;
     int xfix = XFixesQueryExtension(dpy, &evbase, &errbase);
     assert(xfix);
-
     XEvent ev;
     Window tray;
     tray = get_tray(dpy);
@@ -184,23 +177,14 @@ int main(int argc, char **argv) {
     signal(SIGABRT, cleanup);
     signal(SIGTERM, cleanup);
     signal(SIGTSTP, cleanup);
-
     parse_args(argv, argc);
-
-    XWindowAttributes wa;
-
     Display *dpy;
     int screen;
     Window root, win;
-
-    if (!(dpy = XOpenDisplay(NULL)))
-        return -1;
+    if (!(dpy = XOpenDisplay(NULL))) return -1;
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
     win = create_window(dpy, root);
-    if (!XGetWindowAttributes(dpy, root, &wa))
-        return -1;
-
     start_mainloop(dpy, win);
     return 1;
 }
