@@ -48,10 +48,10 @@ void parse_args(char **argv, int argc) {
         if (argv[i][0] == '-') {
             if (!strcmp(argv[i]+1, "h")) {
                 help();
-            } else if (!strcmp(argv[i]+1, "i")) {
+            } else if (!strcmp(argv[i] + 1, "i")) {
                 if ((i + 1) < argc && argv[i + 1][0] != '-' && access(argv[i + 1], R_OK) == 0) icon = argv[i+1];
                 else printf("Illegal icon path. Skipping the argument.\n");
-            } else if (!strcmp(argv[i]+1, "s")) {
+            } else if (!strcmp(argv[i] + 1, "s")) {
                 if ((i + 1) < argc && isanum(argv[i + 1])) size = atoi(argv[i + 1]);
                 else printf("Illegal size. Skipping the argument.\n");
             } else if (isanum((argv[i] + 1))) {
